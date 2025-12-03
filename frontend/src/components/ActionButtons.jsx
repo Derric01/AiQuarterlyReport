@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Database, Calculator, Brain, CheckCircle, Star } from 'lucide-react';
 import { fetchData, computeMetrics, generateReport, validateReport, getStyleScore } from '@/lib/api';
-import { toast } from '@/lib/toast';
+import { toast } from './ui/toast';
 
 export default function ActionButtons({ 
   setMetrics, 
