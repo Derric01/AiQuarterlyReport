@@ -7,7 +7,7 @@ import MetricsCard from './components/MetricsCard';
 import ReportCard from './components/ReportCard';
 import ValidationCard from './components/ValidationCard';
 import StyleScoreCard from './components/StyleScoreCard';
-import { Toaster } from './lib/toast';
+import { Toaster } from './components/ui/toast';
 import './index.css';
 
 const queryClient = new QueryClient({
