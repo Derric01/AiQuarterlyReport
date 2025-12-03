@@ -5,7 +5,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { FileText, Copy, Download, RefreshCw } from 'lucide-react';
 import { toast } from './ui/toast';
 import { useMutation } from '@tanstack/react-query';
-import { generateReport } from '@/lib/api';
+import { generateReport } from '@/lib/api.js';
 
 export default function ReportCard({ report, loading, setReport, metrics }) {
   const regenerateReportMutation = useMutation({
