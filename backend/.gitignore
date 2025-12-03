@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual Environment
+myenv/
+ai-reports-env/
+venv/
+ENV/
+env/
+.venv
+
+# Environment variables
+.env
+
+# ChromaDB
+chroma_db/
+*.db
+*.sqlite3
+
+# Logs
+*.log
