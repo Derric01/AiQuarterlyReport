@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { FileText, Copy, Download, RefreshCw } from 'lucide-react';
-import { toast } from './ui/toast';
+import { toast } from '@/hooks/use-toast.js';
 import { useMutation } from '@tanstack/react-query';
 import { generateReport } from '@/lib/api.js';
 
