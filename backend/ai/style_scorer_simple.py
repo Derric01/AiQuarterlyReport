@@ -21,11 +21,17 @@ class StyleScorer:
         # Initialize embedding model for similarity
         self.embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
         
-        # Initialize ChromaDB
+        # Initialize ChromaDB - use in-memory for ephemeral environments
         try:
-            self.chroma_client = chromadb.PersistentClient(path="./chroma_db")
+            if os.getenv('RENDER'):
+                # In-memory client for production
+                self.chroma_client = chromadb.EphemeralClient()
+            else:
+                # Persistent client for local development
+                self.chroma_client = chromadb.PersistentClient(path="./chroma_db")
             self.collection = self.chroma_client.get_collection("quarterly_reports")
-        except:
+        except Exception as e:
+            print(f"⚠️ ChromaDB collection not ready: {e}")
             self.collection = None
     
     def score_sync(self, report: str) -> Dict[str, Any]:

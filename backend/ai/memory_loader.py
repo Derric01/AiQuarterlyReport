@@ -12,8 +12,16 @@ class MemoryLoader:
         # Use sentence-transformers for embeddings
         self.embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
         
-        # Initialize ChromaDB
-        self.chroma_client = chromadb.PersistentClient(path="./chroma_db")
+        # Initialize ChromaDB - use in-memory for ephemeral environments (like Render)
+        # Falls back to persistent storage for local development
+        if os.getenv('RENDER'):
+            # In-memory client for production (Render has ephemeral storage)
+            self.chroma_client = chromadb.EphemeralClient()
+            print("🔄 Using ChromaDB in-memory mode (ephemeral storage)")
+        else:
+            # Persistent client for local development
+            self.chroma_client = chromadb.PersistentClient(path="./chroma_db")
+            print("💾 Using ChromaDB persistent mode (local storage)")
         
         # Collection name
         self.collection_name = "quarterly_reports"
