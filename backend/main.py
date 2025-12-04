@@ -188,7 +188,7 @@ async def health_check():
     }
 
 # Serve frontend static files in production
-frontend_dist_path = Path(__file__).parent.parent / "frontend" / "dist"
+frontend_dist_path = Path(__file__).parent / "static"  # Changed to use backend/static
 if frontend_dist_path.exists():
     # Mount static assets
     app.mount("/assets", StaticFiles(directory=str(frontend_dist_path / "assets")), name="assets")
@@ -208,6 +208,26 @@ if frontend_dist_path.exists():
             return FileResponse(index_path)
         
         raise HTTPException(status_code=404, detail="Not found")
+else:
+    print(f"⚠️ Warning: Frontend static files not found at {frontend_dist_path}")
+    
+    # Fallback: try original path for local development
+    fallback_path = Path(__file__).parent.parent / "frontend" / "dist"
+    if fallback_path.exists():
+        print(f"✅ Found frontend files at fallback path: {fallback_path}")
+        app.mount("/assets", StaticFiles(directory=str(fallback_path / "assets")), name="assets")
+        
+        @app.get("/{full_path:path}")
+        async def serve_frontend_fallback(full_path: str):
+            file_path = fallback_path / full_path
+            if file_path.is_file():
+                return FileResponse(file_path)
+            
+            index_path = fallback_path / "index.html"
+            if index_path.exists():
+                return FileResponse(index_path)
+            
+            raise HTTPException(status_code=404, detail="Not found")
 
 if __name__ == "__main__":
     port = int(os.getenv("PORT", 8000))
