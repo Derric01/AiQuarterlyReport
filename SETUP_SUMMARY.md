@@ -24,7 +24,7 @@
 
 ### 🔑 Your Gemini API Key
 ```
-AIzaSyBQWLpud9-WlsCG7FLpS-mbIu1TwFiviB4
+your_gemini_api_key_here
 ```
 
 ### 🚀 Starting Your Application
@@ -41,7 +41,7 @@ pip install -r requirements.txt
 python setup.py
 
 # 4. Add your API key to .env file
-# GEMINI_API_KEY=AIzaSyBQWLpud9-WlsCG7FLpS-mbIu1TwFiviB4
+# GEMINI_API_KEY=your_gemini_api_key_here
 
 # 5. Start backend
 uvicorn main:app --reload
