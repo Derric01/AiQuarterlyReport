@@ -1,53 +1,69 @@
-# AI-Powered Quarterly Report Generator
+# AI Quarterly Report Generator
 
-A complete full-stack application that automates quarterly equity market report generation using real financial data, LLM generation, AI-based validation, and RAG-based style matching.
+An automated system that generates quarterly equity market reports using real financial data and AI validation.
 
-![AI Quarterly Reports](https://img.shields.io/badge/AI-Powered-blue.svg)
-![React](https://img.shields.io/badge/React-18.2.0-blue.svg)
-![FastAPI](https://img.shields.io/badge/FastAPI-0.104.1-green.svg)
-![Python](https://img.shields.io/badge/Python-3.8+-yellow.svg)
+## Features
 
-## 🌟 Features
+- **Data Collection**: Fetches ACWI and S&P 500 market data
+- **Report Generation**: Creates quarterly reports using Google Gemini AI
+- **Validation System**: Validates reports with deterministic and AI-powered checks
+- **Style Matching**: Compares report style against historical examples using RAG
 
-### 🎯 Core Functionality
-- **Automated Data Fetching**: Downloads ACWI and S&P 500 data using yfinance
-- **Intelligent Metrics Computation**: Calculates quarterly returns, YTD performance, and market highs
-- **AI Report Generation**: Creates professional quarterly reports using OpenAI GPT-4
-- **Dual Validation System**: 
-  - Deterministic numeric validation
-  - AI-powered semantic validation
-- **Style Similarity Scoring**: RAG-based style matching using embeddings and ChromaDB
+## Technology Stack
 
-### 🎨 Frontend (React + ShadCN UI)
-- **Enterprise-Grade UI**: Beautiful, responsive design with Tailwind CSS
-- **Smooth Animations**: Framer Motion animations throughout
-- **Real-time Updates**: React Query for efficient state management
-- **Professional Cards**: MetricsCard, ReportCard, ValidationCard, StyleScoreCard
-- **Toast Notifications**: User feedback for all operations
-- **Responsive Design**: Perfect on desktop, tablet, and mobile
+- **Frontend**: React, Tailwind CSS, ShadCN UI
+- **Backend**: FastAPI, Python
+- **AI**: Google Gemini, ChromaDB, SentenceTransformers
+- **Data**: yfinance for market data
 
-### 🚀 Backend (FastAPI + AI)
-- **High-Performance API**: FastAPI with async support
-- **Financial Data Integration**: yfinance for real market data
-- **Advanced AI Pipeline**:
-  - LLM Report Generator (Google Gemini 1.5 Pro)
-  - Deterministic Numeric Validator
-  - AI-Powered Semantic Validator
-  - Style Similarity Scorer (SentenceTransformers + RAG)
-- **Vector Database**: ChromaDB for storing and retrieving past reports
-- **CORS Enabled**: Ready for local development
+## Quick Start
 
-## 🏗️ Architecture
+### Prerequisites
+- Python 3.8+
+- Node.js 16+
+- Google Gemini API key
 
+### Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/Derric01/AiQuarterlyReport.git
+cd ai-quarterly-reports
 ```
-├─────────────────┐    ├─────────────────┐    ├─────────────────┐
-│   React Client  │───▶│  FastAPI Server │───▶│   AI Services   │
-│                 │    │                 │    │                 │
-│ • ShadCN UI     │    │ • Data Fetching │    │ • Gemini 1.5 Pro│
-│ • Framer Motion │    │ • Metrics Comp  │    │ • Embeddings    │
-│ • React Query   │    │ • CORS Enabled  │    │ • ChromaDB      │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
+
+2. Set up backend:
+```bash
+cd backend
+pip install -r requirements.txt
+cp .env.example .env  # Add your GEMINI_API_KEY
+python main.py
 ```
+
+3. Set up frontend:
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+## API Endpoints
+
+- `GET /fetch` - Fetch market data
+- `GET /metrics` - Compute quarterly metrics
+- `POST /report-ai` - Generate AI report
+- `POST /validate-ai` - Validate report
+- `POST /style-score-ai` - Score report style
+
+## Environment Variables
+
+```env
+GEMINI_API_KEY=your_gemini_api_key_here
+PORT=8000
+```
+
+## License
+
+MIT License
 
 ## 📁 Project Structure
 
