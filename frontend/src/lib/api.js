@@ -8,31 +8,31 @@ const api = axios.create({
 
 // Data fetching
 export const fetchData = async () => {
-  const response = await api.get('/fetch');
+  const response = await api.get('/api/fetch');
   return response.data;
 };
 
 // Compute metrics
 export const computeMetrics = async () => {
-  const response = await api.get('/metrics');
+  const response = await api.get('/api/metrics');
   return response.data;
 };
 
 // Generate AI report
 export const generateReport = async (metrics) => {
-  const response = await api.post('/report-ai', { metrics });
+  const response = await api.post('/api/report-ai', { metrics });
   return response.data;
 };
 
 // Validate report
 export const validateReport = async (report, metrics) => {
-  const response = await api.post('/validate-ai', { report, metrics });
+  const response = await api.post('/api/validate-ai', { report, metrics });
   return response.data;
 };
 
 // Get style score
 export const getStyleScore = async (report) => {
-  const response = await api.post('/style-score-ai', { report });
+  const response = await api.post('/api/style-score-ai', { report });
   return response.data;
 };
 

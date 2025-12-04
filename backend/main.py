@@ -102,7 +102,7 @@ class ValidateReportRequest(BaseModel):
 class StyleScoreRequest(BaseModel):
     report: str
 
-@app.get("/")
+@app.get("/api")
 async def root():
     return {
         "message": "AI Quarterly Reports API", 
@@ -110,7 +110,7 @@ async def root():
         "status": "running"
     }
 
-@app.get("/fetch")
+@app.get("/api/fetch")
 async def fetch_data():
     """Fetch ACWI and S&P 500 market data"""
     try:
@@ -123,7 +123,7 @@ async def fetch_data():
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to fetch data: {str(e)}")
 
-@app.get("/metrics")
+@app.get("/api/metrics")
 async def get_metrics():
     """Compute quarterly metrics from fetched data"""
     try:
@@ -132,7 +132,7 @@ async def get_metrics():
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to compute metrics: {str(e)}")
 
-@app.post("/report-ai")
+@app.post("/api/report-ai")
 def generate_report_ai(request: GenerateReportRequest):
     """Generate AI-powered quarterly report"""
     try:
@@ -148,7 +148,7 @@ def generate_report_ai(request: GenerateReportRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to generate report: {str(e)}")
 
-@app.post("/validate-ai")
+@app.post("/api/validate-ai")
 def validate_report_ai(request: ValidateReportRequest):
     """Validate report using deterministic and AI methods"""
     try:
@@ -161,7 +161,7 @@ def validate_report_ai(request: ValidateReportRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to validate report: {str(e)}")
 
-@app.post("/style-score-ai")
+@app.post("/api/style-score-ai")
 def get_style_score_ai(request: StyleScoreRequest):
     """Get style similarity score using RAG"""
     try:
@@ -174,7 +174,7 @@ def get_style_score_ai(request: StyleScoreRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to compute style score: {str(e)}")
 
-@app.get("/health")
+@app.get("/api/health")
 async def health_check():
     """Health check endpoint"""
     return {
