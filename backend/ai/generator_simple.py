@@ -8,15 +8,26 @@ load_dotenv()
 class ReportGenerator:
     def __init__(self):
         """Initialize the Report Generator with Gemini client"""
-        api_key = os.getenv("GEMINI_API_KEY")
-        if not api_key:
-            raise ValueError("GEMINI_API_KEY not found in environment variables")
+        self.api_key = os.getenv("GEMINI_API_KEY")
+        self.model = None
         
-        genai.configure(api_key=api_key)
-        self.model = genai.GenerativeModel('gemini-2.5-flash')
+        if self.api_key:
+            try:
+                genai.configure(api_key=self.api_key)
+                self.model = genai.GenerativeModel('gemini-2.5-flash')
+            except Exception as e:
+                print(f"Warning: Failed to initialize Gemini model: {e}")
+        else:
+            print("Warning: GEMINI_API_KEY not found - AI features will be disabled")
 
     def generate(self, metrics: Dict[str, Any]) -> str:
         """Generate a quarterly report using the provided metrics"""
+        if not self.api_key:
+            return "Error: GEMINI_API_KEY not configured. Please set the API key in environment variables."
+        
+        if not self.model:
+            return "Error: Gemini model not initialized. Please check your API key."
+            
         try:
             # Format metrics for the prompt
             metrics_text = self._format_metrics(metrics)

@@ -12,7 +12,7 @@ services:
       cd .. &&
       mkdir -p backend/static &&
       cp -r frontend/dist/* backend/static/
-    startCommand: cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT
+    startCommand: cd backend && python -m uvicorn main:app --host 0.0.0.0 --port $PORT --log-level info
     envVars:
       - key: GEMINI_API_KEY
         sync: false

@@ -157,6 +157,9 @@ if frontend_dist_path.exists():
 
 if __name__ == "__main__":
     port = int(os.getenv("PORT", 8000))
+    print(f"Starting server on port {port}")
+    print(f"Environment PORT variable: {os.getenv('PORT', 'Not set')}")
+    
     uvicorn.run(
         "main:app", 
         host="0.0.0.0", 

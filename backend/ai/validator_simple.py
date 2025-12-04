@@ -9,17 +9,30 @@ load_dotenv()
 class ReportValidator:
     def __init__(self):
         """Initialize the Report Validator with Gemini client"""
-        api_key = os.getenv("GEMINI_API_KEY")
-        if not api_key:
-            raise ValueError("GEMINI_API_KEY not found in environment variables")
+        self.api_key = os.getenv("GEMINI_API_KEY")
+        self.model = None
         
-        genai.configure(api_key=api_key)
-        self.model = genai.GenerativeModel('gemini-2.5-flash')
+        if self.api_key:
+            try:
+                genai.configure(api_key=self.api_key)
+                self.model = genai.GenerativeModel('gemini-2.5-flash')
+            except Exception as e:
+                print(f"Warning: Failed to initialize Gemini model for validation: {e}")
+        else:
+            print("Warning: GEMINI_API_KEY not found - AI validation features will be disabled")
     
     def validate(self, report: str, metrics: Dict[str, Any]) -> Dict[str, Any]:
         """
         Validate report using deterministic and semantic methods
         """
+        if not self.api_key:
+            return {
+                "is_valid": False,
+                "errors": ["GEMINI_API_KEY not configured - AI validation disabled"],
+                "deterministic_errors": [],
+                "ai_feedback": "API key required for AI validation"
+            }
+            
         try:
             # Simple deterministic validation - check if key numbers are present
             deterministic_errors = []
@@ -31,6 +44,14 @@ class ReportValidator:
                     percentage = f"{value:.1f}%" if value > 0 else f"{value:.1f}%"
                     if percentage not in report and str(value) not in report:
                         deterministic_errors.append(f"Missing metric: {key} ({value})")
+            
+            if not self.model:
+                return {
+                    "is_valid": len(deterministic_errors) == 0,
+                    "errors": deterministic_errors,
+                    "deterministic_errors": deterministic_errors,
+                    "ai_feedback": "AI model not available - using deterministic validation only"
+                }
             
             # Simple AI validation
             metrics_text = ", ".join([f"{k}: {v}" for k, v in metrics.items()])

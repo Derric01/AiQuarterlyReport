@@ -11,33 +11,64 @@ load_dotenv()
 class StyleScorer:
     def __init__(self):
         """Initialize Style Scorer with Gemini AI and ChromaDB"""
-        api_key = os.getenv("GEMINI_API_KEY")
-        if not api_key:
-            raise ValueError("GEMINI_API_KEY not found in environment variables")
+        self.api_key = os.getenv("GEMINI_API_KEY")
+        self.model = None
+        self.embedding_model = None
+        self.chroma_client = None
+        self.collection = None
         
-        genai.configure(api_key=api_key)
-        self.model = genai.GenerativeModel('gemini-2.5-flash')
-        
-        # Initialize embedding model for similarity
-        self.embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
-        
-        # Initialize ChromaDB - use in-memory for ephemeral environments
-        try:
-            if os.getenv('RENDER'):
-                # In-memory client for production
-                self.chroma_client = chromadb.EphemeralClient()
-            else:
-                # Persistent client for local development
-                self.chroma_client = chromadb.PersistentClient(path="./chroma_db")
-            self.collection = self.chroma_client.get_collection("quarterly_reports")
-        except Exception as e:
-            print(f"⚠️ ChromaDB collection not ready: {e}")
-            self.collection = None
+        if self.api_key:
+            try:
+                genai.configure(api_key=self.api_key)
+                self.model = genai.GenerativeModel('gemini-2.5-flash')
+                
+                # Initialize embedding model for similarity
+                self.embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
+                
+                # Initialize ChromaDB - use in-memory for ephemeral environments
+                try:
+                    if os.getenv('RENDER'):
+                        # In-memory client for production
+                        self.chroma_client = chromadb.EphemeralClient()
+                    else:
+                        # Persistent client for local development
+                        self.chroma_client = chromadb.PersistentClient(path="./chroma_db")
+                    self.collection = self.chroma_client.get_collection("quarterly_reports")
+                except Exception as e:
+                    print(f"⚠️ ChromaDB collection not ready: {e}")
+                    self.collection = None
+                    
+            except Exception as e:
+                print(f"Warning: Failed to initialize AI components: {e}")
+        else:
+            print("Warning: GEMINI_API_KEY not found - AI style scoring features will be disabled")
     
     def score_sync(self, report: str) -> Dict[str, Any]:
         """
         Score the style of the report using Gemini AI and historical comparison
         """
+        if not self.api_key:
+            return {
+                "overall_score": 0,
+                "breakdown": {
+                    "structure": {"score": 0, "details": "API key required"},
+                    "language_quality": {"score": 0, "details": "API key required"},
+                    "historical_similarity": {"score": 0, "details": "API key required"}
+                },
+                "feedback": "GEMINI_API_KEY not configured - AI style scoring disabled"
+            }
+            
+        if not self.model:
+            return {
+                "overall_score": 0,
+                "breakdown": {
+                    "structure": {"score": 0, "details": "AI model not available"},
+                    "language_quality": {"score": 0, "details": "AI model not available"}, 
+                    "historical_similarity": {"score": 0, "details": "AI model not available"}
+                },
+                "feedback": "AI model initialization failed"
+            }
+            
         try:
             # 1. Structural Analysis (30 points)
             structural_score, structural_details = self._analyze_structure(report)
