@@ -33,21 +33,63 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Initialize AI components
-report_generator = ReportGenerator()
-report_validator = ReportValidator()
-style_scorer = StyleScorer()
-memory_loader = MemoryLoader()
+# Initialize AI components lazily
+report_generator = None
+report_validator = None
+style_scorer = None
+memory_loader = None
 
-# Load memory on startup
+def get_report_generator():
+    """Lazy initialization of report generator"""
+    global report_generator
+    if report_generator is None:
+        try:
+            report_generator = ReportGenerator()
+        except Exception as e:
+            print(f"⚠️ Warning: Failed to initialize ReportGenerator: {e}")
+            report_generator = False
+    return report_generator if report_generator is not False else None
+
+def get_report_validator():
+    """Lazy initialization of report validator"""
+    global report_validator
+    if report_validator is None:
+        try:
+            report_validator = ReportValidator()
+        except Exception as e:
+            print(f"⚠️ Warning: Failed to initialize ReportValidator: {e}")
+            report_validator = False
+    return report_validator if report_validator is not False else None
+
+def get_style_scorer():
+    """Lazy initialization of style scorer"""
+    global style_scorer
+    if style_scorer is None:
+        try:
+            style_scorer = StyleScorer()
+        except Exception as e:
+            print(f"⚠️ Warning: Failed to initialize StyleScorer: {e}")
+            style_scorer = False
+    return style_scorer if style_scorer is not False else None
+
+def get_memory_loader():
+    """Lazy initialization of memory loader"""
+    global memory_loader
+    if memory_loader is None:
+        try:
+            memory_loader = MemoryLoader()
+            memory_loader.load_past_reports()
+            print("✅ Past reports loaded into vector database")
+        except Exception as e:
+            print(f"⚠️ Warning: Failed to initialize MemoryLoader: {e}")
+            memory_loader = False
+    return memory_loader if memory_loader is not False else None
+
+# Light startup
 @app.on_event("startup")
 def startup_event():
-    """Load past reports into memory/vector database"""
-    try:
-        memory_loader.load_past_reports()
-        print("✅ Past reports loaded into vector database")
-    except Exception as e:
-        print(f"⚠️ Warning: Failed to load past reports: {e}")
+    """Light startup - no heavy AI loading"""
+    print("🚀 AI Quarterly Reports API started successfully")
 
 # Request models
 class GenerateReportRequest(BaseModel):
@@ -94,7 +136,11 @@ async def get_metrics():
 def generate_report_ai(request: GenerateReportRequest):
     """Generate AI-powered quarterly report"""
     try:
-        report = report_generator.generate(request.metrics)
+        generator = get_report_generator()
+        if generator is None:
+            raise HTTPException(status_code=503, detail="AI service unavailable - API key not configured")
+        
+        report = generator.generate(request.metrics)
         return JSONResponse(content={
             "report": report,
             "status": "success"
@@ -106,7 +152,11 @@ def generate_report_ai(request: GenerateReportRequest):
 def validate_report_ai(request: ValidateReportRequest):
     """Validate report using deterministic and AI methods"""
     try:
-        validation_result = report_validator.validate(request.report, request.metrics)
+        validator = get_report_validator()
+        if validator is None:
+            raise HTTPException(status_code=503, detail="AI service unavailable - API key not configured")
+        
+        validation_result = validator.validate(request.report, request.metrics)
         return JSONResponse(content=validation_result)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to validate report: {str(e)}")
@@ -115,7 +165,11 @@ def validate_report_ai(request: ValidateReportRequest):
 def get_style_score_ai(request: StyleScoreRequest):
     """Get style similarity score using RAG"""
     try:
-        style_result = style_scorer.score_sync(request.report)
+        scorer = get_style_scorer()
+        if scorer is None:
+            raise HTTPException(status_code=503, detail="AI service unavailable - API key not configured")
+        
+        style_result = scorer.score_sync(request.report)
         return JSONResponse(content=style_result)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to compute style score: {str(e)}")
@@ -126,10 +180,10 @@ async def health_check():
     return {
         "status": "healthy",
         "ai_components": {
-            "generator": "ready",
-            "validator": "ready", 
-            "style_scorer": "ready",
-            "memory_loader": "ready"
+            "generator": "lazy_loaded" if report_generator is None else ("ready" if report_generator else "failed"),
+            "validator": "lazy_loaded" if report_validator is None else ("ready" if report_validator else "failed"),
+            "style_scorer": "lazy_loaded" if style_scorer is None else ("ready" if style_scorer else "failed"),
+            "memory_loader": "lazy_loaded" if memory_loader is None else ("ready" if memory_loader else "failed")
         }
     }
 

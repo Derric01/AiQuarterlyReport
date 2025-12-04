@@ -9,11 +9,16 @@ load_dotenv()
 class StyleScorer:
     def __init__(self):
         """Initialize Style Scorer with ChromaDB and SentenceTransformers"""
-        # Use sentence-transformers for embeddings
-        self.embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
+        # Lazy load embedding model
+        self.embedding_model = None
         
         # Initialize ChromaDB
-        self.chroma_client = chromadb.PersistentClient(path="./chroma_db")
+        if os.getenv('RENDER'):
+            # In-memory client for production (Render has ephemeral storage)
+            self.chroma_client = chromadb.EphemeralClient()
+        else:
+            # Persistent client for local development
+            self.chroma_client = chromadb.PersistentClient(path="./chroma_db")
         
         try:
             # Try to get existing collection
@@ -24,6 +29,17 @@ class StyleScorer:
                 name="quarterly_reports",
                 metadata={"description": "Historical quarterly reports for style matching"}
             )
+    
+    def _get_embedding_model(self):
+        """Lazy load the embedding model"""
+        if self.embedding_model is None:
+            try:
+                from sentence_transformers import SentenceTransformer
+                self.embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
+            except Exception as e:
+                print(f"⚠️ Warning: Failed to load embedding model: {e}")
+                return None
+        return self.embedding_model
     
     async def score(self, report: str) -> Dict[str, Any]:
         """
@@ -164,7 +180,10 @@ class SyncStyleScorer(StyleScorer):
     
     def _get_embedding_sync(self, text: str) -> List[float]:
         """Generate embedding using SentenceTransformers (synchronous)"""
-        embedding = self.embedding_model.encode(text)
+        model = self._get_embedding_model()
+        if model is None:
+            raise Exception("Embedding model not available")
+        embedding = model.encode(text)
         return embedding.tolist()
 
 if __name__ == "__main__":

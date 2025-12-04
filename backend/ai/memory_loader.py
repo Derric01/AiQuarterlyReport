@@ -9,8 +9,7 @@ load_dotenv()
 class MemoryLoader:
     def __init__(self):
         """Initialize Memory Loader for ChromaDB"""
-        # Use sentence-transformers for embeddings
-        self.embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
+        self.embedding_model = None  # Lazy load
         
         # Initialize ChromaDB - use in-memory for ephemeral environments (like Render)
         # Falls back to persistent storage for local development
@@ -25,6 +24,19 @@ class MemoryLoader:
         
         # Collection name
         self.collection_name = "quarterly_reports"
+    
+    def _get_embedding_model(self):
+        """Lazy load the embedding model"""
+        if self.embedding_model is None:
+            try:
+                # Use smaller model for lower memory usage
+                from sentence_transformers import SentenceTransformer
+                self.embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
+                print("📊 Embedding model loaded (MiniLM-L6-v2)")
+            except Exception as e:
+                print(f"⚠️ Warning: Failed to load embedding model: {e}")
+                return None
+        return self.embedding_model
     
     def load_past_reports(self) -> bool:
         """
@@ -126,7 +138,10 @@ class MemoryLoader:
     
     def _get_embedding_sync(self, text: str) -> List[float]:
         """Generate embedding using SentenceTransformers (synchronous)"""
-        embedding = self.embedding_model.encode(text)
+        model = self._get_embedding_model()
+        if model is None:
+            raise Exception("Embedding model not available")
+        embedding = model.encode(text)
         return embedding.tolist()
     
     def get_collection_status(self) -> dict:
