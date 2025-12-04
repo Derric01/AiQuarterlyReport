@@ -1,10 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button.jsx';
+import { Card, CardContent } from '@/components/ui/card.jsx';
 import { Database, Calculator, Brain, CheckCircle, Star } from 'lucide-react';
-import { fetchData, computeMetrics, generateReport, validateReport, getStyleScore } from '@/lib/api';
-import { toast } from '@/hooks/use-toast';
+import { fetchData, computeMetrics, generateReport, validateReport, getStyleScore } from '@/lib/api.js';
+import { toast } from '@/hooks/use-toast.js';
 
 export default function ActionButtons({ 
   setMetrics, 

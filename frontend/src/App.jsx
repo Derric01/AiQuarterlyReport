@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
-import Header from './components/Header';
-import ActionButtons from './components/ActionButtons';
-import MetricsCard from './components/MetricsCard';
-import ReportCard from './components/ReportCard';
-import ValidationCard from './components/ValidationCard';
-import StyleScoreCard from './components/StyleScoreCard';
-import { Toaster } from './components/ui/toast';
+import Header from './components/Header.jsx';
+import ActionButtons from './components/ActionButtons.jsx';
+import MetricsCard from './components/MetricsCard.jsx';
+import ReportCard from './components/ReportCard.jsx';
+import ValidationCard from './components/ValidationCard.jsx';
+import StyleScoreCard from './components/StyleScoreCard.jsx';
+import { Toaster } from './components/ui/toast.jsx';
 import './index.css';
 
 const queryClient = new QueryClient({

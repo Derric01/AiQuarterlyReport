@@ -1,8 +1,8 @@
 import { motion } from 'framer-motion';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card.jsx';
+import { Skeleton } from '@/components/ui/skeleton.jsx';
+import { Badge } from '@/components/ui/badge.jsx';
+import { Progress } from '@/components/ui/progress.jsx';
 import { BarChart3, Edit, PieChart, FileText, Sparkles, TrendingUp, Star, Trophy, CheckCircle } from 'lucide-react';
 
 export default function StyleScoreCard({ styleScore, loading }) {

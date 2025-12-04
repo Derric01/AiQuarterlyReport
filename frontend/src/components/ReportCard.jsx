@@ -1,11 +1,11 @@
 import { motion } from 'framer-motion';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card.jsx';
+import { Button } from '@/components/ui/button.jsx';
+import { Skeleton } from '@/components/ui/skeleton.jsx';
 import { FileText, Copy, Download, RefreshCw } from 'lucide-react';
-import { toast } from '@/hooks/use-toast';
+import { toast } from '@/hooks/use-toast.js';
 import { useMutation } from '@tanstack/react-query';
-import { generateReport } from '@/lib/api';
+import { generateReport } from '@/lib/api.js';
 
 export default function ReportCard({ report, loading, setReport, metrics }) {
   const regenerateReportMutation = useMutation({

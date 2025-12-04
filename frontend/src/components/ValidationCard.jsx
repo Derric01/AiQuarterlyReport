@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card.jsx';
+import { Skeleton } from '@/components/ui/skeleton.jsx';
+import { Badge } from '@/components/ui/badge.jsx';
 import { Shield, CheckCircle, X, AlertCircle } from 'lucide-react';
 
 export default function ValidationCard({ validation, loading }) {

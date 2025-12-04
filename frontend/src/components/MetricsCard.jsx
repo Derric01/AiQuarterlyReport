@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card.jsx';
+import { Button } from '@/components/ui/button.jsx';
+import { Skeleton } from '@/components/ui/skeleton.jsx';
 import { BarChart3, ChevronDown, ChevronUp } from 'lucide-react';
 import { useState } from 'react';
 
