@@ -10,10 +10,6 @@ from dotenv import load_dotenv
 
 from fetch_data import fetch_market_data
 from compute_metrics import compute_quarterly_metrics
-from ai.generator_simple import ReportGenerator
-from ai.validator_simple import ReportValidator
-from ai.style_scorer_simple import StyleScorer
-from ai.memory_loader import MemoryLoader
 
 # Load environment variables
 load_dotenv()
@@ -44,6 +40,7 @@ def get_report_generator():
     global report_generator
     if report_generator is None:
         try:
+            from ai.generator_simple import ReportGenerator
             report_generator = ReportGenerator()
         except Exception as e:
             print(f"⚠️ Warning: Failed to initialize ReportGenerator: {e}")
@@ -55,6 +52,7 @@ def get_report_validator():
     global report_validator
     if report_validator is None:
         try:
+            from ai.validator_simple import ReportValidator
             report_validator = ReportValidator()
         except Exception as e:
             print(f"⚠️ Warning: Failed to initialize ReportValidator: {e}")
@@ -66,6 +64,7 @@ def get_style_scorer():
     global style_scorer
     if style_scorer is None:
         try:
+            from ai.style_scorer_simple import StyleScorer
             style_scorer = StyleScorer()
         except Exception as e:
             print(f"⚠️ Warning: Failed to initialize StyleScorer: {e}")
@@ -77,6 +76,7 @@ def get_memory_loader():
     global memory_loader
     if memory_loader is None:
         try:
+            from ai.memory_loader import MemoryLoader
             memory_loader = MemoryLoader()
             memory_loader.load_past_reports()
             print("✅ Past reports loaded into vector database")
