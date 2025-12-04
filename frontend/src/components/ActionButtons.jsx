@@ -3,8 +3,8 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Database, Calculator, Brain, CheckCircle, Star } from 'lucide-react';
-import { fetchData, computeMetrics, generateReport, validateReport, getStyleScore } from '@/lib/api.js';
-import { toast } from '@/hooks/use-toast.js';
+import { fetchData, computeMetrics, generateReport, validateReport, getStyleScore } from '@/lib/api';
+import { toast } from '@/hooks/use-toast';
 
 export default function ActionButtons({ 
   setMetrics, 

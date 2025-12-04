@@ -3,9 +3,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { FileText, Copy, Download, RefreshCw } from 'lucide-react';
-import { toast } from '@/hooks/use-toast.js';
+import { toast } from '@/hooks/use-toast';
 import { useMutation } from '@tanstack/react-query';
-import { generateReport } from '@/lib/api.js';
+import { generateReport } from '@/lib/api';
 
 export default function ReportCard({ report, loading, setReport, metrics }) {
   const regenerateReportMutation = useMutation({
