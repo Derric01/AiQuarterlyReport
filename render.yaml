@@ -1,14 +1,12 @@
 services:
   - type: web
     name: ai-quarterly-reports
-    runtime: python
+    runtime: docker
     plan: free
-    buildCommand: pip install --upgrade pip && pip install -r backend/requirements.txt && cd frontend && npm install && npm run build && mkdir -p ../backend/static && cp -r dist/* ../backend/static/
-    startCommand: cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
     envVars:
-      - key: PYTHON_VERSION
-        value: "3.11.0"
-      - key: RENDER
-        value: "true"
       - key: GEMINI_API_KEY
         sync: false
+      - key: PORT
+        value: "8000"
