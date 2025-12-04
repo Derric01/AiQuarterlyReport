@@ -12,7 +12,7 @@ services:
       cd .. &&
       mkdir -p backend/static &&
       cp -r frontend/dist/* backend/static/
-    startCommand: cd backend && python -c "import gc; gc.collect(); import main; print('✅ Server starting with lazy AI loading')" && python -m uvicorn main:app --host 0.0.0.0 --port $PORT --log-level info --workers 1
+    startCommand: cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT --workers 1 --timeout-keep-alive 30
     envVars:
       - key: GEMINI_API_KEY
         sync: false

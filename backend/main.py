@@ -8,9 +8,6 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
-from fetch_data import fetch_market_data
-from compute_metrics import compute_quarterly_metrics
-
 # Load environment variables
 load_dotenv()
 
@@ -114,6 +111,7 @@ async def root():
 async def fetch_data():
     """Fetch ACWI and S&P 500 market data"""
     try:
+        from fetch_data import fetch_market_data
         result = fetch_market_data()
         return JSONResponse(content={
             "status": "success",
@@ -127,6 +125,7 @@ async def fetch_data():
 async def get_metrics():
     """Compute quarterly metrics from fetched data"""
     try:
+        from compute_metrics import compute_quarterly_metrics
         metrics = compute_quarterly_metrics()
         return JSONResponse(content=metrics)
     except Exception as e:
